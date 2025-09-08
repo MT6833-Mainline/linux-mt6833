@@ -250,6 +250,58 @@ static int mtk_xt_find_eint_num(struct mtk_pinctrl *hw, unsigned long eint_n)
 }
 
 /*
+ * The eh register determines the selection of the driving control
+ * for i2c pins.
+ * eh = 0: Non-i2c mode.
+ * eh = 1: i2c mode.
+ */
+int mtk_eh_ctrl(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
+		u16 mode)
+{
+	const struct mtk_eh_pin_pinmux *p = hw->soc->eh_pin_pinmux;
+	u32 eh_info_num = hw->soc->neh_pins;
+	u32 val = 0, on = 0, found = 0, i = 0;
+	int err;
+
+	while (i < eh_info_num) {
+		if (desc->number == p[i].pin) {
+			found = 1;
+			if (mode == p[i].pinmux) {
+				on = 1;
+				break;
+			}
+		}
+		/*
+		 * It is possible that one pin may have more than one pinmux
+		 *   that shall enable eh.
+		 * Besides, we assume that hw->soc->eh_pin_pinmux is sorted
+		 *   according to field 'pin'.
+		 * So when desc->number < p->pin, it mean no match will be
+		 *   found and we can leave.
+		 */
+		if (desc->number < p[i].pin)
+			break;
+
+		i++;
+	}
+
+	if (!found)
+		return 0;
+
+	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_EH, &val);
+	if (err)
+		return err;
+
+	if (on)
+		val |= on;
+	else
+		val &= MTK_EH_ENABLE_MASK;
+
+	return mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_EH, val);
+}
+EXPORT_SYMBOL_GPL(mtk_eh_ctrl);
+
+/*
  * Virtual GPIO only used inside SOC and not being exported to outside SOC.
  * Some modules use virtual GPIO as eint (e.g. pmif or usb).
  * In MTK platform, external interrupt (EINT) and GPIO is 1-1 mapping
@@ -1231,6 +1283,10 @@ int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
 	int e0 = !!(arg & 2);
 	int e1 = !!(arg & 4);
 
+	err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_EH, arg);
+	if (!err)
+		return 0;
+
 	err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_EN, en);
 	if (err)
 		return err;
@@ -1255,6 +1311,10 @@ int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
 {
 	u32 en, e0, e1;
 	int err;
+
+	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_EH, val);
+	if (!err)
+		return 0;
 
 	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_EN, &en);
 	if (err)

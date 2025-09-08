@@ -35,6 +35,8 @@
 				 MTK_PULL_PUPD_R1R0_TYPE |\
 				 MTK_PULL_RSEL_TYPE)
 
+#define MTK_EH_ENABLE_MASK	0xfffffffe
+
 #define EINT_NA	U16_MAX
 #define NO_EINT_SUPPORT	EINT_NA
 
@@ -67,6 +69,11 @@
 		.down_rsel = _down_rsel,				\
 	}
 
+#define PIN_MUX_EH(_pin, _pinmux) {						\
+		.pin = _pin,						\
+		.pinmux = _pinmux,					\
+	}
+
 /* List these attributes which could be modified for the pin */
 enum {
 	PINCTRL_PIN_REG_MODE,
@@ -88,6 +95,7 @@ enum {
 	PINCTRL_PIN_REG_IES,
 	PINCTRL_PIN_REG_PULLEN,
 	PINCTRL_PIN_REG_PULLSEL,
+	PINCTRL_PIN_REG_DRV_EH,
 	PINCTRL_PIN_REG_DRV_EN,
 	PINCTRL_PIN_REG_DRV_E0,
 	PINCTRL_PIN_REG_DRV_E1,
@@ -205,6 +213,17 @@ struct mtk_eint_desc {
 };
 
 /**
+ * struct mtk_eh_pin_pinmux - entry recording (pin, pinmux) whose
+ *			      eh can be enabled
+ * @pin:                pin number
+ * @pinmux:             pinmux number
+ */
+struct mtk_eh_pin_pinmux {
+	u16 pin;
+	u16 pinmux;
+};
+
+/**
  * struct mtk_pin_desc - the structure that providing information
  *			       for each pin of chips
  * @number:		unique pin number from the global pin number space
@@ -252,6 +271,8 @@ struct mtk_pin_soc {
 	const unsigned int		*pull_type;
 	const struct mtk_pin_rsel	*pin_rsel;
 	unsigned int			npin_rsel;
+	const struct mtk_eh_pin_pinmux  *eh_pin_pinmux;
+	unsigned int			neh_pins;
 
 	/* Specific pinconfig operations */
 	int (*bias_disable_set)(struct mtk_pinctrl *hw,
@@ -310,6 +331,9 @@ int mtk_hw_set_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
 		     int field, int value);
 int mtk_hw_get_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
 		     int field, int *value);
+
+int mtk_eh_ctrl(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
+		u16 mode);
 
 int mtk_build_eint(struct mtk_pinctrl *hw, struct platform_device *pdev);
 
