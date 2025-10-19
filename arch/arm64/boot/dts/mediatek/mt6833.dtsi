@@ -16,7 +16,7 @@
 //#include <dt-bindings/reset/mediatek,mt6833-resets.h>
 
 / {
-	compatible = "mediatek,mt6833"
+	compatible = "mediatek,mt6833";
 	interrupt-parent = <&sysirq>;
 	#address-cells = <2>;
 	#size-cells = <1>;
