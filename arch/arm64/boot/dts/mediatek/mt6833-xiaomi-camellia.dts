@@ -1,0 +1,158 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Device Tree Source for Xiaomi Poco M3 Pro 5G // (camellia)
+ * 
+ * !NEEDS TESTING FROM SIMILLAR DEVICE = Xiaomi Redmi Mote 10 Pro 5G // (camellian)
+ *
+ * Copyright (c) Ryo "evilMyQueen" Yamada <vernamjap@gmail.com>
+ */
+
+/dts-v1/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/iio/adc/mediatek,mt6370_adc.h>
+#include <dt-bindings/input/input.h>
+#include <dt-bindings/leds/common.h>
+/* include <dt-bindings/pinctrl/mediatek,mt6833-pinfunc.h> */
+
+#include "mt6833.dtsi"
+#include "mt6359.dtsi"
+
+/ {
+	chassis-type = "handset";
+	compatible = "xiaomi,camellia", "mediatek,mt6833";
+	model = "Xiaomi Poco M3 Pro 5G";
+
+	aliases {
+		serial0 = &uart0;
+	};
+
+	chosen {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		bootargs = "earlycon=mtk8250,0x11002000 console=ttyS0,921600n1 console=tty0 console=ttyGS0 clk_ignore_unused regulator_ignore_unused pd_ignore_unused PMOS_NOSPLASH";
+		stdout-path = "serial0:921600n8";
+		linux,initrd-start = <0x51100000>;
+		linux,initrd-end = <0x5198822b>;
+		
+		framebuffer0: framebuffer@7ba10000 {
+			compatible = "simple-framebuffer";
+			memory-region = <&framebuffer_reserved>;
+			width = <1088>;
+			height = <2400>;
+			stride = <((1080 + 8) * 4)>;
+			format = "a8r8g8b8";
+			status = "okay";
+		};
+	};
+
+	memory: memory@40000000 {
+		device_type = "memory";
+		reg = <0 0x40000000 1 0x80000000>;
+	};
+
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+		
+		dpm_reserved: memory@ffe60000 {
+			reg = <0 0xffe60000 0 0x190000>;
+			no-map;
+		};
+
+		framebuffer_reserved: memory@7ba10000 {
+			reg = <0 0x7ba10000 0 0x1df0000>;
+			no-map;
+		};
+
+		minirdump: memory@48170000 {
+			reg = <0 0x48170000 0 0x10000>;
+			no-map;
+		};
+
+		pstore: memory@48090000 {
+			reg = <0 0x48090000 0 0xe0000>;
+			no-map;
+		};
+
+		picachu: memory@bfd00000 {
+			reg = <0 0xbfd00000 0 0x80000>;
+			no-map;
+		};
+
+		mcupm_reserved: memory@7e900000 {
+			reg = <0 0x7e900000 0 0x100000>;
+			no-map;
+		};
+
+		tee_reserved: memory@70000000 {
+			reg = <0 0x70000000 0 0x5000000>;
+			no-map;
+		};
+
+		tee_ree_reserved: memory@7d800000 {
+			reg = <0 0x7d800000 0 0xc00000>;
+			no-map;
+		};
+
+		tee_log_reserved: memory@bfc00000 {
+			reg = <0 0xbfc00000 0 0x20000>;
+			no-map;
+		};
+
+		sspm_reserved: memory@77eb0000 {
+			reg = <0 0x7feb0000 0 0x100000>;
+			no-map;
+		};
+
+		tee_secmem: memory@7e400000 {
+			reg = <0 0x7e400000 0 0x400000>;
+			no-map;
+		};
+
+		atf_log_reserved: memory@bfe00000 {
+			reg = <0 0xbfe00000 0 0x40000>;
+			no-map;
+		};
+
+		atf_ramdump_reserved: memory@bff70000 {
+			reg = <0 0xbff70000 0 0x80000>;
+			no-map;
+		};
+
+		atf_reserved: memory@48c00000 {
+			reg = <0 0x48c00000 0 0x200000>;
+			no-map;
+		};
+
+		log_store: memory@7ffbf000 {
+			reg = <0 0x7ffbf000 0 0x40000>;
+		};
+
+		gz_log: memory@7e800000 {
+			reg = <0 0x7e800000 0 0x41000>;
+		};
+
+		gz: memory@7ea00000 {
+			reg = <0 0x7ea00000 0 0x1400000>;
+			no-map;
+		};
+
+		emi_mbist_buf: memory@7ffff000 {
+			reg = <0 0x7ffff000 0 0x1000>;
+			no-map;
+		};
+	};
+};
+
+/* &pwrap {
+ * 	status = "okay";
+ * };
+ */
+
+&uart0 {
+	status = "okay";
+};
