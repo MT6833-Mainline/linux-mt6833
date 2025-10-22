@@ -4,7 +4,7 @@
  * 
  * !NEEDS TESTING FROM SIMILLAR DEVICE = Xiaomi Redmi Mote 10 Pro 5G // (camellian)
  *
- * Copyright (c) Ryo "evilMyQueen" Yamada <vernamjap@gmail.com>
+ * Copyright (c) Ryo "evilMyQueen" Yamada <evilMyQueen@mainlining.org>
  */
 
 /dts-v1/;
@@ -35,7 +35,7 @@
 		bootargs = "earlycon=mtk8250,0x11002000 console=ttyS0,921600n1 console=tty0 console=ttyGS0 clk_ignore_unused regulator_ignore_unused pd_ignore_unused PMOS_NOSPLASH";
 		stdout-path = "serial0:921600n8";
 		linux,initrd-start = <0x51100000>;
-		linux,initrd-end = <0x5198822b>;
+		linux,initrd-end = <0x519726b1>;
 		
 		framebuffer0: framebuffer@7ba10000 {
 			compatible = "simple-framebuffer";
@@ -152,6 +152,21 @@
  * 	status = "okay";
  * };
  */
+
+&u2port {
+	status = "okay";
+};
+
+&usb0 {
+	status = "okay";
+	dr_mode = "otg";
+	maximum-speed = "high-speed";
+
+};
+
+&usb_phy {
+	status = "okay";
+};
 
 &uart0 {
 	status = "okay";
