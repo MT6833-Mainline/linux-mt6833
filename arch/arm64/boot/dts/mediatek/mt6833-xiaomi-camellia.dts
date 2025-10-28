@@ -13,7 +13,7 @@
 #include <dt-bindings/iio/adc/mediatek,mt6370_adc.h>
 #include <dt-bindings/input/input.h>
 #include <dt-bindings/leds/common.h>
-/* include <dt-bindings/pinctrl/mediatek,mt6833-pinfunc.h> */
+#include <dt-bindings/pinctrl/mediatek,mt6833-pinfunc.h>
 
 #include "mt6833.dtsi"
 #include "mt6359.dtsi"
@@ -35,7 +35,7 @@
 		bootargs = "earlycon=mtk8250,0x11002000 console=ttyS0,921600n1 console=tty0 console=ttyGS0 clk_ignore_unused regulator_ignore_unused pd_ignore_unused PMOS_NOSPLASH";
 		stdout-path = "serial0:921600n8";
 		linux,initrd-start = <0x51100000>;
-		linux,initrd-end = <0x519726b1>;
+		linux,initrd-end = <0x51972958>;
 		
 		framebuffer0: framebuffer@7ba10000 {
 			compatible = "simple-framebuffer";
@@ -146,25 +146,98 @@
 			no-map;
 		};
 	};
-};
 
-/* &pwrap {
- * 	status = "okay";
- * };
- */
+	mt6359_vmch_fixed_reg: ldo-vmch {
+		compatible = "regulator-fixed";
+		regulator-name = "vmch";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-enable-ramp-delay = <60>;
+		regulator-always-on;
+	};
 
-&u2port {
+	mt6359_vmc_fixed_reg: ldo-vmc {
+		compatible = "regulator-fixed";
+		regulator-name = "vmc";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-enable-ramp-delay = <60>;
+		regulator-always-on;
+	};
+
+	/* gpio_keys: gpio-keys {
+		compatible = "gpio-keys";
+		pinctrl-0 = <&key_gpio_default>;
+		pinctrl-names = "default";
+
+		voldown-key {
+			label = "Volume Down";
+			linux,code = <KEY_VOLUMEDOWN>;
+			gpios = <&pio 54 GPIO_ACTIVE_LOW>;
+		};
+	}; */
+}; 
+
+&pwrap {
 	status = "okay";
 };
 
-&usb0 {
+&mmc1 {
 	status = "okay";
-	dr_mode = "otg";
+	pinctrl-names = "default", "state_uhs";
+	pinctrl-0 = <&mmc1_pins_default>;
+	pinctrl-1 = <&mmc1_pins_default>;
+	bus-width = <4>;
+	max-frequency = <200000000>;
+	cap-sd-highspeed;
+	cap-mmc-highspeed;
+	sd-uhs-sdr12;
+	sd-uhs-sdr25;
+	sd-uhs-sdr50;
+	sd-uhs-sdr104;
+	sd-uhs-ddr50;
+	mmc-ddr-1_8v;
+	mmc-hs200-1_8v;
+	no-sdio;
+	cd-gpios = <&pio 4 GPIO_ACTIVE_HIGH>;
+	vmmc-supply = <&mt6359_vmch_fixed_reg>; /* HACK = fake vmch vbus instead of upstream mt6359 pmic */
+	vqmmc-supply = <&mt6359_vmc_fixed_reg>; /* HACK = fake vmc vbus instead of upstream m6359 pmic */
+};
+
+/* Lord please help me, WHY THE SDCARD ARENT WORKING */
+
+&pio {
+	mmc1_pins_default: mmc1-pins-default-state {
+		pins-clk {
+			pinmux = <PINMUX_GPIO125__FUNC_MSDC1_CLK>;
+			drive-strength = <3>;
+			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
+		};
+
+		pins-cmd-dat {
+			pinmux = <PINMUX_GPIO128__FUNC_MSDC1_DAT0>,
+					 <PINMUX_GPIO127__FUNC_MSDC1_DAT1>,
+					 <PINMUX_GPIO129__FUNC_MSDC1_DAT2>,
+					 <PINMUX_GPIO130__FUNC_MSDC1_DAT3>,
+					 <PINMUX_GPIO126__FUNC_MSDC1_CMD>;
+			input-enable;
+			drive-strength = <3>;
+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
+		};
+	};
+};
+
+&usb2 {
+	status = "okay";
+	dr_mode = "peripheral";
 	maximum-speed = "high-speed";
-
 };
 
-&usb_phy {
+&u2phy {
+	status = "okay";
+};
+
+&u2port0 {
 	status = "okay";
 };
 
