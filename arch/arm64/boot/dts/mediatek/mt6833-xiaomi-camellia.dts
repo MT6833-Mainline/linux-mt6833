@@ -31,12 +31,10 @@
 		#address-cells = <2>;
 		#size-cells = <2>;
 		ranges;
-
+		
 		bootargs = "earlycon=mtk8250,0x11002000 console=ttyS0,921600n1 console=tty0 console=ttyGS0 clk_ignore_unused regulator_ignore_unused pd_ignore_unused PMOS_NOSPLASH";
 		stdout-path = "serial0:921600n8";
-		linux,initrd-start = <0x51100000>;
-		linux,initrd-end = <0x51972958>;
-		
+
 		framebuffer0: framebuffer@7ba10000 {
 			compatible = "simple-framebuffer";
 			memory-region = <&framebuffer_reserved>;
