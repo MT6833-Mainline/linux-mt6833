@@ -347,7 +347,8 @@
 			compatible = "mediatek,mt6833-uart", "mediatek,mt6577-uart";
 			reg = <0 0x11002000 0 0x1000>;
 			interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_LOW>;
-			clocks = <&clk26m>; // <&infracfg_ao CLK_IFRAO_UART0>;
+			/* real refs: <&clk26m>, <&infracfg_ao CLK_IFRAO_UART0>; no mt6833 CCF yet */
+			clocks = <&clk26m>, <&clk26m>;
 			clock-names = "baud", "bus";
 			status = "disabled";
 		};
@@ -356,7 +357,7 @@
 			compatible = "mediatek,mt6833-uart", "mediatek,mt6577-uart";
 			reg = <0 0x11003000 0 0x1000>;
 			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_LOW>;
-			clocks = <&clk26m>; // <&infracfg_ao CLK_IFRAO_UART1>;
+			clocks = <&clk26m>, <&clk26m>;
 			clock-names = "baud", "bus";
 			status = "disabled";
 		};
@@ -418,35 +419,24 @@
 				   <&infracfg_ao CLK_IFRAO_MSDC1_SRC>; */
 			clock-names = "source", "hclk", "source_cg";
 			status = "disabled";
-		}; /*
+		};
 
-		gpu: gpu@13000000 {
-			compatible = "mediatek,mt6833-mali", "arm,mali-valhall-jm";
-			reg = <0 0x13000000 0 0x4000>;
-			interrupts =
-				<GIC_SPI 364 IRQ_TYPE_LEVEL_HIGH &ppi_cluster0>,
-				<GIC_SPI 365 IRQ_TYPE_LEVEL_HIGH &ppi_cluster0>,
-				<GIC_SPI 366 IRQ_TYPE_LEVEL_HIGH &ppi_cluster0>,
-				<GIC_SPI 367 IRQ_TYPE_LEVEL_HIGH &ppi_cluster0>,
-				<GIC_SPI 368 IRQ_TYPE_LEVEL_HIGH &ppi_cluster0>;
-			interrupt-names =
-				"gpu",
-				"mmu",
-				"job",
-				"event",
-				"power";
-			/* power-domains = <&spm MT6833_POWER_DOMAIN_MFG2>,
-					<&spm MT6833_POWER_DOMAIN_MFG3>; 
-			power-domain-names = "core0",
-					     "core1"; */
-		//	#cooling-cells = <2>;
-		//	status = "disabled";
-		//}; 
+		/*
+		 * GPU (Mali Valhall) — needs SPM power-domains not yet wired.
+		 * Kept as reference for future bring-up.
+		 *
+		 * gpu: gpu@13000000 {
+		 *     compatible = "mediatek,mt6833-mali", "arm,mali-valhall-jm";
+		 *     reg = <0 0x13000000 0 0x4000>;
+		 *     ...
+		 * };
+		 */
 
-		/*ufsphy: ufsphy@11fa0000 {
-			compatible = "mediatek,mt6833-ufsphy", 
+		ufsphy: ufsphy@11fa0000 {
+			compatible = "mediatek,mt6833-ufsphy",
 				     "mediatek,mt8183-ufsphy";
 			reg = <0 0x11fa0000 0 0xc000>;
+			/* real refs: <&topckgen CLK_TOP_UNIVPLL_D6>, <&infracfg_ao CLK_IFRAO_UFS_MP_SAP_BCLK>; */
 			clocks = <&clk26m>, <&clk26m>;
 			clock-names = "unipro", "mp";
 			#phy-cells = <0>;
@@ -454,63 +444,25 @@
 		};
 
 		ufs: ufs@11270000 {
-			compatible = "mediatek,mt6833-ufshci", "mediatek,mt8183-ufshci";
+			compatible = "mediatek,mt6833-ufshci",
+				     "mediatek,mt8183-ufshci";
 			reg = <0 0x11270000 0 0x2300>;
-			phys = <&ufsphy>;
 			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
-
-			clocks =
-				<&infracfg_ao CLK_IFRAO_UFS>,
-				<&infracfg_ao CLK_IFRAO_UNIPRO_SYSCLK>,
-				<&infracfg_ao CLK_IFRAO_UFS_MP_SAP_BCLK>,
-				<&infracfg_ao CLK_IFRAO_AES>,
-				<&topckgen CLK_TOP_AES_UFSFDE_SEL>,
-				<&topckgen CLK_TOP_UNIVPLL_D6>,
-				<&topckgen CLK_TOP_MAINPLL_D4>;
-
-			clock-names =
-				"ufs-clk",
-				"ufs-unipro-clk",
-				"ufs-mp-clk",
-				"ufs-crypto-clk",
-				"ufs-vendor-crypto-clk-mux",
-				"ufs-vendor-crypto-normal-parent-clk",
-				"ufs-vendor-crypto-perf-parent-clk";
-
-			freq-table-hz =
-				<0 0>,
-				<0 0>,
-				<0 0>,
-				<0 0>,
-				<0 0>,
-				<0 0>,
-				<0 0>;
-
-			resets = <>
-			reset-names = "";
-
-			vcc-supply = <&mt_pmic_vemc_ldo_reg>;
-			vcc-fixed-regulator;
-
-
-
+			phys = <&ufsphy>;
+			/* real ref: <&infracfg_ao CLK_IFRAO_UFS>; */
+			clocks = <&clk26m>;
+			clock-names = "ufs";
+			freq-table-hz = <0 0>;
+			vcc-supply = <&mt6359_vufs_ldo_reg>;
+			status = "disabled";
 		};
 
-		 iommu0: m4u@14016000 {
-			compatible = "mediatek,iommu_v0";
-			reg = <0 0x14016000 0 0x1000>;
-			mediatek,larbs = <&smi_larb0 &smi_larb1 &smi_larb2>,
-					 <&smi_larb4 &smi_larb7 &smi_larb9>,
-					 <&smi_larb11 &smi_larb13 &smi_larb14>,
-					 <&smi_larb16 &smi_larb17 &smi_larb14>,
-					 <&smi_larb19 &smi_larb20>;
-			interrupts = <GIC_SPI 271 IRQ_TYPE_LEVEL_HIGH>;
-			clocks = <&mmsys_config CLK_MM_SPI_IOMMU>,
-				 <&scpsys SCP_SYS_DIS>;
-			clock-names = "disp-iommu-ck",
-				      "power";
-			#iommu-cells = <1>;
-		}; */
+		/*
+		 * IOMMU / M4U — needs smi_larbs and scpsys not yet wired.
+		 * Kept as reference for future bring-up.
+		 *
+		 * iommu0: m4u@14016000 { ... };
+		 */
 	};
 };
 
