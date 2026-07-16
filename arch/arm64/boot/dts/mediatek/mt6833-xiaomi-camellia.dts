@@ -163,19 +163,6 @@
 		regulator-always-on;
 	};
 
-	/* HACK: fake vufs LDO because mt6359 PMIC pwrap child regulators are not
-	 * usable yet on this port (same reason as vmch/vmc above). Real UFS vcc
-	 * on camellia is mt6359 vufs @ 2.9V (typical); we keep the rail hard-on.
-	 */
-	mt6359_vufs_fixed_reg: ldo-vufs {
-		compatible = "regulator-fixed";
-		regulator-name = "vufs";
-		regulator-min-microvolt = <2900000>;
-		regulator-max-microvolt = <2900000>;
-		regulator-enable-ramp-delay = <100>;
-		regulator-always-on;
-	};
-
 	/* gpio_keys: gpio-keys {
 		compatible = "gpio-keys";
 		pinctrl-0 = <&key_gpio_default>;
@@ -254,13 +241,4 @@
 
 &uart0 {
 	status = "okay";
-};
-
-&ufsphy {
-	status = "okay";
-};
-
-&ufs {
-	status = "okay";
-	vcc-supply = <&mt6359_vufs_fixed_reg>; /* HACK — see mt6359_vufs_fixed_reg */
 };
