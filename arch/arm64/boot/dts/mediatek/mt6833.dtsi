@@ -306,14 +306,14 @@
 		};
 
 		pwrap: pwrap@10026000 {
- 			compatible = "mediatek,mt6833-pwrap";
- 			reg = <0 0x10026000 0 0x1000>;
- 			reg-names = "pwrap";
- 			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk26m>;
- 			clock-names = "spi", "wrap";
- 			status = "disabled";	
- 		};
+			compatible = "mediatek,mt6833-pwrap";
+			reg = <0 0x10026000 0 0x1000>;
+			reg-names = "pwrap";
+			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&clk26m>;
+			clock-names = "spi", "wrap";
+			status = "disabled";
+		};
  
 		gic: interrupt-controller@c000000 {
 			compatible = "arm,gic-v3";
