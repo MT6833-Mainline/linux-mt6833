@@ -31,7 +31,7 @@
 		#address-cells = <2>;
 		#size-cells = <2>;
 		ranges;
-		
+
 		bootargs = "earlycon=mtk8250,0x11002000 console=ttyS0,921600n1 console=tty0 console=ttyGS0 clk_ignore_unused regulator_ignore_unused pd_ignore_unused PMOS_NOSPLASH";
 		stdout-path = "serial0:921600n8";
 
