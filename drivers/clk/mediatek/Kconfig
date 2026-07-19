@@ -373,6 +373,122 @@ config COMMON_CLK_MT6797_VENCSYS
 	help
 	  This driver supports MediaTek MT6797 vencsys clocks.
 
+config COMMON_CLK_MT6833
+	tristate "Clock driver for MediaTek MT6833"
+	depends on ARCH_MEDIATEK || COMPILE_TEST
+	select COMMON_CLK_MEDIATEK
+	default ARCH_MEDIATEK
+	help
+	  This driver supports MediaTek MT6833 basic clocks.
+
+config COMMON_CLK_MT6833_AUDIO
+	tristate "Clock driver for MediaTek MT6833 audio"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 audio clocks.
+
+config COMMON_CLK_MT6833_CAMSYS_MAIN
+	tristate "Clock driver for MediaTek MT6833 camsys_main"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 camsys_main clocks.
+
+config COMMON_CLK_MT6833_CAMSYS_RAWA
+	tristate "Clock driver for MediaTek MT6833 camsys_rawa"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 camsys_rawa clocks.
+
+config COMMON_CLK_MT6833_CAMSYS_RAWB
+	tristate "Clock driver for MediaTek MT6833 camsys_rawb"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 camsys_rawb clocks.
+
+config COMMON_CLK_MT6833_IMGSYS1
+	tristate "Clock driver for MediaTek MT6833 imgsys1"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 imgsys1 clocks.
+
+config COMMON_CLK_MT6833_IMGSYS2
+	tristate "Clock driver for MediaTek MT6833 imgsys2"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 imgsys2 clocks.
+
+config COMMON_CLK_MT6833_IMP_IIC_WRAP_C
+	tristate "Clock driver for MediaTek MT6833 imp_iic_wrap_c"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 imp_iic_wrap_c clocks.
+
+config COMMON_CLK_MT6833_IMP_IIC_WRAP_E
+	tristate "Clock driver for MediaTek MT6833 imp_iic_wrap_e"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 imp_iic_wrap_e clocks.
+
+config COMMON_CLK_MT6833_IMP_IIC_WRAP_N
+	tristate "Clock driver for MediaTek MT6833 imp_iic_wrap_n"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 imp_iic_wrap_n clocks.
+
+config COMMON_CLK_MT6833_IMP_IIC_WRAP_S
+	tristate "Clock driver for MediaTek MT6833 imp_iic_wrap_s"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 imp_iic_wrap_s clocks.
+
+config COMMON_CLK_MT6833_IMP_IIC_WRAP_W
+	tristate "Clock driver for MediaTek MT6833 imp_iic_wrap_w"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 imp_iic_wrap_w clocks.
+
+config COMMON_CLK_MT6833_IMP_IIC_WRAP_WS
+	tristate "Clock driver for MediaTek MT6833 imp_iic_wrap_ws"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 imp_iic_wrap_ws clocks.
+
+config COMMON_CLK_MT6833_IPESYS
+	tristate "Clock driver for MediaTek MT6833 ipesys"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 ipesys clocks.
+
+config COMMON_CLK_MT6833_MDPSYS_CONFIG
+	tristate "Clock driver for MediaTek MT6833 mdpsys_config"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 mdpsys_config clocks.
+
+config COMMON_CLK_MT6833_MFGSYS
+	tristate "Clock driver for MediaTek MT6833 mfgsys"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 mfgsys clocks.
+
+config COMMON_CLK_MT6833_MMSYS_CONFIG
+	tristate "Clock driver for MediaTek MT6833 mmsys_config"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 mmsys_config clocks.
+
+config COMMON_CLK_MT6833_VDEC_GCON
+	tristate "Clock driver for MediaTek MT6833 vdec_gcon"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 vdec_gcon clocks.
+
+config COMMON_CLK_MT6833_VENC_GCON
+	tristate "Clock driver for MediaTek MT6833 venc_gcon"
+	depends on COMMON_CLK_MT6833
+	help
+	  This driver supports MediaTek MT6833 venc_gcon clocks.
+
 config COMMON_CLK_MT7622
 	tristate "Clock driver for MediaTek MT7622"
 	depends on ARCH_MEDIATEK || COMPILE_TEST
